@@ -214,7 +214,7 @@ stock bool:L4DDirect_TryOfferingTankBot(entity, bEnterStasis)
 }
 
 /**
- * Force to pass the tank to another player.
+ * Force to replace the tank. (pass count will not be changed)
  *
  * @param entity			Entity index of the tank
  * @param target			Entity index of infected player
