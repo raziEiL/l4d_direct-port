@@ -1,7 +1,7 @@
 l4d_direct beta
 ===========
 
-Following ProdigySim with his amazing l4d2_direct for L4D2 I provide you L4D1 version.
+Following ProdigySim with his amazing l4d2_direct for L4D2 I provide L4D1 version.
 
 Note: Beta NOT support some Windows function!
 

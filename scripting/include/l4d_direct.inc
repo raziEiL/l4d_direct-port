@@ -213,6 +213,37 @@ stock bool:L4DDirect_TryOfferingTankBot(entity, bEnterStasis)
 	return true;
 }
 
+/**
+ * Force to pass the tank to another player.
+ *
+ * @param entity			Entity index of the tank
+ * @param target			Entity index of infected player
+ * @return					False on error otherwise true
+ * @error					SDK call preparation failed
+ */
+stock bool:L4DDirect_ReplaceTank(entity, target)
+{
+	static Handle:hReplaceTank;
+
+	if (hReplaceTank == INVALID_HANDLE){
+
+		StartPrepSDKCall(SDKCall_Raw);
+
+		if (PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "ZombieManager::ReplaceTank")){
+
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			hReplaceTank = EndPrepSDKCall();
+		}
+
+		if (hReplaceTank == INVALID_HANDLE)
+			return false;
+	}
+
+	SDKCall(hReplaceTank, L4DDirect_GetZombieManager(), entity, target);
+	return true;
+}
+
 static bool:IsClient(index)
 {
 	return index > 0 && index <= MaxClients;

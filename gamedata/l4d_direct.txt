@@ -6,6 +6,11 @@
 		{
 			"ZombieManager"
 			{
+				"windows"
+				{
+					"signature" "InstallBotControl"
+					"read" "2"
+				}
 				"linux"
 				{
 					"signature" "TheZombieManager"
@@ -83,11 +88,22 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows"	"\x83\xEC\x2A\x55\x56\x8B\x74\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xE9\x57\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE\xE8\x2A\x2A\x2A\x2A\x83\xF8\x03"
+				/* 83 EC ? 55 56 8B 74 ? ? 8B 06 8B 90 ? ? ? ? 8B E9 57 8B CE FF D2 84 C0 0F 84 ? ? ? ? 8B CE E8 ? ? ? ? 83 F8 03 */
 			}
 			"SelectModelByPopulation"
 			{
 				"library"	"server"
 				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x81\xEC\x2A\x2A\x00\x00\x56"
+				/* 8B 0D ? ? ? ? 81 EC ? ? 00 00 56 */
+			}
+			/* Used solely to get the offset for TheZombieManager, find using string "resource/ModEvents.res", second call after that */
+			/* Same as l4d2 signature */
+			"InstallBotControl"
+			{
+				"library"	"server"
+				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x10\x6A\x2A\xFF\xD2\xA1\x2A\x2A\x2A\x2A\x8B\x08"
+				/* 8B 0D ? ? ? ? 85 C9 74 ? 8B 01 8B 10 6A ? FF D2 A1 ? ? ? ? 8B 08 */
 			}
 			"TheZombieManager"
 			{

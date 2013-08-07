@@ -69,6 +69,21 @@ stock Address:L4DDirect_GetCDirector()
 }
 
 /**
+ * Get the address of the global ZombieManager instance (TheZombieManager)
+ *
+ * @return				Address of the global TheZombieManager, or Address_Null on failure.
+ */
+stock Address:L4DDirect_GetZombieManager()
+{
+	static Address:TheZombieManager = Address_Null;
+
+	if (TheZombieManager == Address_Null)
+		TheZombieManager = GameConfGetAddress(L4DDirect_GetGameConf(), "ZombieManager");
+
+	return TheZombieManager;
+}
+
+/**
  * Get the address of the global TerrorNavMesh instance (TheNavMesh)
  *
  * @return				Address of the global TheNavMesh, or Address_Null on failure.
