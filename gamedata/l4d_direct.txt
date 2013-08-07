@@ -67,10 +67,13 @@
 		}
 		"Signatures"
 		{
+			/* search for: "bot_player_replace" */
 			"CTerrorPlayer::TakeOverZombieBot"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
+				"windows"	"\x81\xEC\x08\x2A\x2A\x2A\x53\x55\x8B\xAC\x24\x2A\x2A\x2A\x2A\x56\x33\xDB\x38"
+				/*  81 EC 08 ? ? ? 53 55 8B AC 24 ? ? ? ? 56 33 DB 38 */
 			}
 			"CTerrorPlayer::PlayerZombieAbortControl"
 			{

@@ -244,6 +244,36 @@ stock bool:L4DDirect_ReplaceTank(entity, target)
 	return true;
 }
 
+/**
+ * Take control of a special infected or tank bot
+ *
+ * @param entity			Entity index of bot
+ * @param target			Entity index of player who takes control
+ * @return					False on error otherwise true
+ * @error					SDK call preparation failed
+ */
+stock bool:L4DDirect_TakeOverZombieBot(entity, target)
+{
+	static Handle:hTakeOverZombieBot;
+
+	if (hTakeOverZombieBot == INVALID_HANDLE){
+
+		StartPrepSDKCall(SDKCall_Player);
+
+		if (PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CTerrorPlayer::TakeOverZombieBot")){
+
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			hTakeOverZombieBot = EndPrepSDKCall();
+		}
+
+		if (hTakeOverZombieBot == INVALID_HANDLE)
+			return false;
+	}
+
+	SDKCall(hTakeOverZombieBot, target, entity);
+	return true;
+}
+
 static bool:IsClient(index)
 {
 	return index > 0 && index <= MaxClients;
