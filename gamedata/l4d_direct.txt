@@ -32,6 +32,11 @@
 			}
 			"TerrorNavMesh"
 			{
+				"windows"
+				{
+					"signature" "CommandNavSave"
+					"read" "11"
+				}
 				"linux"
 				{
 					"signature" "TheNavMesh"
@@ -48,6 +53,7 @@
 			}
 			"CTerrorPlayer::m_iSurvivorHealthBonus"
 			{
+				"windows"	"7724"
 				"linux"		"7744"
 			}
 			"CDirector::m_iTankPassedCount"
@@ -60,20 +66,28 @@
 				"windows"	"1864"
 				"linux"		"1860"
 			}
+			"CDirector::m_bTankThisRound"
+			{
+				"windows"	"1881"
+			}
+			"CDirector::m_bWitchThisRound"
+			{
+				"windows"	"1883"
+			}
 			"TerrorNavMesh::m_fMapMaxFlowDistance"
 			{
+				"windows"	"1444"
 				"linux"		"1444"
 			}
 		}
 		"Signatures"
 		{
-			/* search for: "bot_player_replace" */
 			"CTerrorPlayer::TakeOverZombieBot"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
 				"windows"	"\x81\xEC\x08\x2A\x2A\x2A\x53\x55\x8B\xAC\x24\x2A\x2A\x2A\x2A\x56\x33\xDB\x38"
-				/*  81 EC 08 ? ? ? 53 55 8B AC 24 ? ? ? ? 56 33 DB 38 */
+				/*   81 EC 08 ? ? ? 53 55 8B AC 24 ? ? ? ? 56 33 DB 38 */
 			}
 			"CTerrorPlayer::PlayerZombieAbortControl"
 			{
@@ -107,6 +121,13 @@
 				"library"	"server"
 				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x10\x6A\x2A\xFF\xD2\xA1\x2A\x2A\x2A\x2A\x8B\x08"
 				/* 8B 0D ? ? ? ? 85 C9 74 ? 8B 01 8B 10 6A ? FF D2 A1 ? ? ? ? 8B 08 */
+			}
+			 /* Look for string "Navigation map '%s' saved.\n" in a short function */
+			"CommandNavSave"
+			{
+				"library"	"server"
+				"windows"	"\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x2A\xFF\xD2\x84\xC0\x8B\x0D\x2A\x2A\x2A\x2A\x74\x15"
+				/* E8 ? ? ? ? 84 C0 74 ? 8B 0D ? ? ? ? 8B 01 8B 50 ? FF D2 84 C0 8B 0D ? ? ? ? 74 15 */
 			}
 			"TheZombieManager"
 			{

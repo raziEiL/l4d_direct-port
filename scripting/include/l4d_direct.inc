@@ -123,7 +123,7 @@ stock Float:L4DDirect_GetMapMaxFlowDistance()
  *
  * @note Survivors health bonuses are 0 until CTerrorPlayer:RecalculateVersusScore(void) calculates it.
  *
- * @param client		Index of the client whose health bonus is to be returned.
+ * @param client		Client id whose health bonus is to be returned.
  * @return				Int value of the survivors health bonus.
 */
 stock L4DDirect_GetSurvivorHealthBonus(client)
@@ -136,6 +136,25 @@ stock L4DDirect_GetSurvivorHealthBonus(client)
 		return value;
 
 	return -1;
+}
+
+/**
+ * Sets the clients health bonus.
+ *
+ * @note Keep in mind the individual survivors health bonus will be recalculate again when CTerrorPlayer:RecalculateVersusScore(void) is invoked.
+ * @note L4D_OnRecalculateVersusScore(client) forward (left4downtown exts) can block health bonus from being calculated to store your own value with this function.
+ *
+ * @param client		Client id to set the health bonus for
+ * @param health		Number of health bonus
+ * @noreturn
+ * @error				Invalid client.
+*/
+stock L4DDirect_SetSurvivorHealthBonus(client, health)
+{
+	if (!IsClient(client))
+		return;
+
+	SetEntityValueFromOffset(client, "CTerrorPlayer::m_iSurvivorHealthBonus", NumberType_Int32, health)
 }
 
 /**
