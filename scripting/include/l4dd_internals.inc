@@ -116,7 +116,7 @@ stock Address:L4DDirect_GetTankPassedCountAddr()
 }
 
 /**
- * Get the address of CDIrectorVersusMode::m_fTankSpawnFlowPercent in the global CDirectorVersusMode instance
+ * Get the address of CDirector::m_fTankSpawnFlowPercent in the global CDirector instance
  *
  * @return				Address of the TankFlow array, or Address_Null on failure.
  */
@@ -130,6 +130,40 @@ stock Address:L4DDirect_GetVSTankFlowAddr()
 		pTankFlowPercent = L4DDirect_GetCDirector() + Address:offs;
 	}
 	return pTankFlowPercent;
+}
+
+/**
+ * Get the address of CDirector::m_bTankThisRound in the global CDirector instance
+ *
+ * @return				Address of the TankToSpawn array, or Address_Null on failure.
+ */
+stock Address:L4DDirect_GeVSTankToSpawnAddr()
+{
+	static Address:pTankSpawnThisRound = Address_Null;
+	if(pTankSpawnThisRound == Address_Null)
+	{
+		new offs = GameConfGetOffset(L4DDirect_GetGameConf(), "CDirector::m_bTankThisRound");
+		if(offs == -1) return Address_Null;
+		pTankSpawnThisRound = L4DDirect_GetCDirector() + Address:offs;
+	}
+	return pTankSpawnThisRound;
+}
+
+/**
+ * Get the address of CDIrectorVersusMode::m_bWitchThisRound in the global CDirectorVersusMode instance
+ *
+ * @return				Address of the WitchToSpawn array, or Address_Null on failure.
+ */
+stock Address:L4DDirect_GetVSWitchToSpawnAddr()
+{
+	static Address:pWitchSpawnThisRound = Address_Null;
+	if(pWitchSpawnThisRound == Address_Null)
+	{
+		new offs = GameConfGetOffset(L4DDirect_GetGameConf(), "CDirector::m_bWitchThisRound");
+		if(offs == -1) return Address_Null;
+		pWitchSpawnThisRound = L4DDirect_GetCDirector() + Address:offs;
+	}
+	return pWitchSpawnThisRound;
 }
 
 /**

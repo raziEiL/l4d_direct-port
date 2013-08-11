@@ -70,6 +70,7 @@ stock L4DDirect_SetTankPassedCount(passes)
 /**
  * Reads the tank flow percent for a given round for versus mode
  *
+ * @note You should check GetVSTankToSpawnThisRound to find out if there is still a tank to spawn this round.
  * @note When the survivors reach this flow percent minus versus_boss_buffer converted to flow percent, a tank will spawn.
  *
  * @param roundNumber	Round number to read tank spawn flow percent of
@@ -98,6 +99,68 @@ stock L4DDirect_SetVSTankFlowPercent(roundNumber, Float:flow)
 	if (roundNumber < 0 || roundNumber > 1) return;
 
 	StoreToAddress(L4DDirect_GetVSTankFlowAddr() + Address:(roundNumber * 4), _:flow, NumberType_Int32);
+}
+
+/**
+ * Is there going to be a tank spawned during the given round
+ *
+ * @param roundNumber	Round number to check for tank spawn on
+ * @return				True if there is still a tank to spawn for the given round, false if it has already been spawned or will not spawn.
+ * @error				Director or Versus Director address not found.
+ */
+stock bool:L4DDirect_GetVSTankToSpawnThisRound( roundNumber )
+{
+	if(roundNumber < 0 || roundNumber > 1) return false;
+
+	return bool:LoadFromAddress( L4DDirect_GeVSTankToSpawnAddr() + Address:roundNumber , NumberType_Int8 );
+}
+
+/**
+ * Tell the director whether or not to spawn a(nother) flow distance-based tank for this round.
+ *
+ * @note If you set this to true after a flow-distance-based tank has been spawned, this can trigger another tank to be spawned based on flow distance
+ *
+ * @param roundNumber	Round number to set a tank spawn on
+ * @param spawn			Whether or not to spawn a flow-distance-based tank for this round.
+ * @noreturn
+ * @error				Director or Versus Director address not found.
+ */
+stock L4DDirect_SetVSTankToSpawnThisRound( roundNumber , bool:spawn )
+{
+	if(roundNumber < 0 || roundNumber > 1) return;
+
+	StoreToAddress( L4DDirect_GeVSTankToSpawnAddr() + Address:roundNumber , _:spawn, NumberType_Int8 );
+}
+
+/**
+ * Is there going to be a witch spawned during the given round
+ *
+ * @param roundNumber	Round number to check for witch spawn on
+ * @return				True if there is still a witch to spawn for the given round, false if it has already been spawned or will not spawn.
+ * @error				Director or Versus Director address not found.
+ */
+stock bool:L4DDirect_GetVSWitchToSpawnThisRound( roundNumber )
+{
+	if(roundNumber < 0 || roundNumber > 1) return false;
+
+	return bool:LoadFromAddress( L4DDirect_GetVSWitchToSpawnAddr() + Address:roundNumber , NumberType_Int8 );
+}
+
+/**
+ * Tell the director whether or not to spawn a(nother) flow distance-based witch for this round.
+ *
+ * @note If you set this to true after a flow-distance-based witch has been spawned, this can trigger another witch to be spawned based on flow distance
+ *
+ * @param roundNumber	Round number to set a witch spawn on
+ * @param spawn			Whether or not to spawn a flow-distance-based witch for this round.
+ * @noreturn
+ * @error				Director or Versus Director address not found.
+ */
+stock L4DDirect_SetVSWitchToSpawnThisRound( roundNumber , bool:spawn )
+{
+	if(roundNumber < 0 || roundNumber > 1) return;
+
+	StoreToAddress( L4DDirect_GetVSWitchToSpawnAddr() + Address:roundNumber , _:spawn , NumberType_Int8 );
 }
 
 /* --- TerrorNavMesh Variable access --- */
