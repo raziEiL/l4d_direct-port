@@ -356,7 +356,7 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
 	return true;
 }
 
-static bool:IsClient(index)
+static stock bool:IsClient(index)
 {
 	return index > 0 && index <= MaxClients;
 }
