@@ -394,7 +394,7 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
 }
 
 //----------------------------------------------------------------------------------
-// Functions above it not support Windows OS yet! (use it on Linux servers)
+// Functions below it not support Windows OS yet! (use it on Linux servers)
 //
 
 /**
