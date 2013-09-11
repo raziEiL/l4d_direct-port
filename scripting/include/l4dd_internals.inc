@@ -150,6 +150,24 @@ stock Address:L4DDirect_GeVSTankToSpawnAddr()
 }
 
 /**
+ * Get the address of CDirector::m_fWitchSpawnFlowPercent in the global CDirector instance
+ *
+ * @return				Address of the TankFlow array, or Address_Null on failure.
+ */
+stock Address:L4DDirect_GetVSWitchFlowAddr()
+{
+	static Address:pTankFlowPercent = Address_Null;
+	if(pTankFlowPercent == Address_Null)
+	{
+		new offs = GameConfGetOffset(L4DDirect_GetGameConf(), "CDirector::m_fWitchSpawnFlowPercent");
+		if(offs == -1) return Address_Null;
+		pTankFlowPercent = L4DDirect_GetCDirector() + Address:offs;
+	}
+	return pTankFlowPercent;
+}
+
+
+/**
  * Get the address of CDIrectorVersusMode::m_bWitchThisRound in the global CDirectorVersusMode instance
  *
  * @return				Address of the WitchToSpawn array, or Address_Null on failure.

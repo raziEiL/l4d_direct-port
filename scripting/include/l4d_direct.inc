@@ -112,7 +112,7 @@ stock bool:L4DDirect_GetVSTankToSpawnThisRound( roundNumber )
 {
 	if(roundNumber < 0 || roundNumber > 1) return false;
 
-	return bool:LoadFromAddress( L4DDirect_GeVSTankToSpawnAddr() + Address:roundNumber , NumberType_Int8 );
+	return bool:LoadFromAddress( L4DDirect_GeVSTankToSpawnAddr() + Address:roundNumber, NumberType_Int8);
 }
 
 /**
@@ -129,7 +129,44 @@ stock L4DDirect_SetVSTankToSpawnThisRound( roundNumber , bool:spawn )
 {
 	if(roundNumber < 0 || roundNumber > 1) return;
 
-	StoreToAddress( L4DDirect_GeVSTankToSpawnAddr() + Address:roundNumber , _:spawn, NumberType_Int8 );
+	StoreToAddress( L4DDirect_GeVSTankToSpawnAddr() + Address:roundNumber, _:spawn, NumberType_Int8);
+}
+
+/**
+ * Reads the witch flow percent for a given round for versus mode
+ *
+ * @note You should check GetVSWitchToSpawnThisRound to find out if a witch is going to be spawned for this round.
+ * @note When the survivors reach this flow percent minus versus_boss_buffer converted to flow percent, a witch will spawn.
+ *
+ *
+ * @param roundNumber	Round number to read witch spawn flow percent of
+ * @return				Witch spawn flow percent for the given round
+ * @error				Director or Versus Director address not found.
+ */
+stock Float:L4DDirect_GetVSWitchFlowPercent(roundNumber)
+{
+	if (roundNumber < 0 || roundNumber > 1) return -1.0;
+
+	return Float:LoadFromAddress(L4DDirect_GetVSWitchFlowAddr() + Address:(roundNumber * 4), NumberType_Int32);
+}
+
+/**
+ * Sets the witch flow percent for a given round for versus mode
+ *
+ * @note You should check GetVSWitchToSpawnThisRound to find out if there is still a witch to spawn this round.
+ * @note When the survivors reach this flow percent minus versus_boss_buffer converted to flow percent, a witch will spawn.
+ *
+ *
+ * @param roundNumber	Round number to set witch spawn flow percent of
+ * @param flow			Floating point percent of flow distance.
+ * @noreturn
+ * @error				Director or Versus Director address not found.
+ */
+stock L4DDirect_SetVWitchFlowPercent(roundNumber, Float:flow)
+{
+	if (roundNumber < 0 || roundNumber > 1) return;
+
+	StoreToAddress(L4DDirect_GetVSWitchFlowAddr() + Address:(roundNumber * 4), _:flow, NumberType_Int32);
 }
 
 /**
@@ -143,7 +180,7 @@ stock bool:L4DDirect_GetVSWitchToSpawnThisRound( roundNumber )
 {
 	if(roundNumber < 0 || roundNumber > 1) return false;
 
-	return bool:LoadFromAddress( L4DDirect_GetVSWitchToSpawnAddr() + Address:roundNumber , NumberType_Int8 );
+	return bool:LoadFromAddress( L4DDirect_GetVSWitchToSpawnAddr() + Address:roundNumber, NumberType_Int8);
 }
 
 /**
@@ -160,7 +197,7 @@ stock L4DDirect_SetVSWitchToSpawnThisRound( roundNumber , bool:spawn )
 {
 	if(roundNumber < 0 || roundNumber > 1) return;
 
-	StoreToAddress( L4DDirect_GetVSWitchToSpawnAddr() + Address:roundNumber , _:spawn , NumberType_Int8 );
+	StoreToAddress( L4DDirect_GetVSWitchToSpawnAddr() + Address:roundNumber, _:spawn , NumberType_Int8);
 }
 
 /* --- TerrorNavMesh Variable access --- */
@@ -354,6 +391,98 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
 
 	SDKCall(hTakeOverZombieBot, target, entity);
 	return true;
+}
+
+//----------------------------------------------------------------------------------
+// Functions above it not support Windows OS yet! (use it on Linux servers)
+//
+
+/**
+ * Get the TerrorNavArea which holds a specific position.
+ *
+ * @note Some positions will not return a nav area (Address_Null). Notable examples are saferooms and small ledges like the guard rail at the start of c2m1_highway.
+ * @param pos           The position to find the containing nav area of
+ * @param beneathLimit
+ * @return              Address to a TerrorNavArea or Address_Null
+ * @error               Unable to prepare SDK call
+ */
+stock Address:L4DDirect_GetTerrorNavArea(Float:pos[3], Float:beneathLimit = 120.0)
+{
+	static Handle:GetNavAreaSDKCall = INVALID_HANDLE;
+
+	if (GetNavAreaSDKCall == INVALID_HANDLE)
+	{
+		StartPrepSDKCall(SDKCall_Raw);
+
+		if (!PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CNavMesh::GetNavArea"))
+		{
+			return Address_Null;
+		}
+
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+		GetNavAreaSDKCall = EndPrepSDKCall();
+
+		if (GetNavAreaSDKCall == INVALID_HANDLE)
+		{
+			return Address_Null;
+		}
+	}
+
+	return Address:SDKCall(GetNavAreaSDKCall, L4DDirect_GetTerrorNavMesh(), pos, beneathLimit);
+}
+
+stock Address:L4DDirect_GetNearestNavArea(Float:pos[3], bool:anyZ = false, Float:maxDist = 100.0, bool:checkLOS = false, bool:checkGround = true)
+{
+	static Handle:GetNavAreaSDKCall = INVALID_HANDLE;
+
+	if (GetNavAreaSDKCall == INVALID_HANDLE)
+	{
+		StartPrepSDKCall(SDKCall_Raw);
+
+		if (!PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CNavMesh::GetNearestNavArea"))
+		{
+			return Address_Null;
+		}
+
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+		GetNavAreaSDKCall = EndPrepSDKCall();
+
+		if (GetNavAreaSDKCall == INVALID_HANDLE)
+		{
+			return Address_Null;
+		}
+	}
+
+	return Address:SDKCall(GetNavAreaSDKCall, L4DDirect_GetTerrorNavMesh(), pos, anyZ, maxDist, checkLOS, checkGround);
+}
+
+/**
+ * Find the distance through the map (in flow units) that a TerrorNavArea is located.
+ *
+ * @param  pTerrorNavArea   Pointer to a TerrorNavArea
+ * @return                  The flow units through the map that the TerrorNavArea is located at.
+ * @error                   When passed an Address_Null
+ */
+stock Float:L4DDirect_GetTerrorNavAreaFlow(Address:pTerrorNavArea)
+{
+	if (pTerrorNavArea == Address_Null)
+		return 0.0;
+
+	static offs = -1;
+	if (offs == -1){
+
+		if ((offs = GameConfGetOffset(L4DDirect_GetGameConf(), "TerrorNavArea::m_flow")) == -1)
+			return 0.0;
+	}
+
+	return Float:LoadFromAddress(pTerrorNavArea + Address:offs, NumberType_Int32);
 }
 
 static stock bool:IsClient(index)

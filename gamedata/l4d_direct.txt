@@ -66,22 +66,45 @@
 				"windows"	"1864"
 				"linux"		"1860"
 			}
+			"CDirector::m_fWitchSpawnFlowPercent"
+			{
+				"windows"	"1872"
+				"linux"		"1868"
+			}
 			"CDirector::m_bTankThisRound"
 			{
-				"windows"	"1881"
+				"windows"	"1880"
+				"linux"		"1876"
 			}
 			"CDirector::m_bWitchThisRound"
 			{
-				"windows"	"1883"
+				"windows"	"1882"
+				"linux"		"1878"
 			}
 			"TerrorNavMesh::m_fMapMaxFlowDistance"
 			{
 				"windows"	"1444"
 				"linux"		"1444"
 			}
+			"TerrorNavArea::m_flow"
+			{
+				"linux"		"348"
+			}
 		}
 		"Signatures"
 		{
+			/* CNavMesh::GetNavArea(Vector  const&,float) */
+			"CNavMesh::GetNavArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavMesh10GetNavAreaERK6Vectorf"
+			}
+			/* NavMesh::GetNearestNavArea(Vector  const&,bool,float,bool,bool) */
+			"CNavMesh::GetNearestNavArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavMesh17GetNearestNavAreaERK6Vectorbfbb"
+			}
 			"CTerrorPlayer::TakeOverZombieBot"
 			{
 				"library"	"server"
