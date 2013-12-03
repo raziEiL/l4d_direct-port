@@ -46,6 +46,11 @@
 		}
 		"Offsets"
 		{
+			"CTerrorPlayer::DoAnimationEvent"
+			{
+				"windows"	"484"
+				"linux"		"485"
+			}
 			"CTerrorPlayer::m_iTankTickets"
 			{
 				"windows"	"7660"

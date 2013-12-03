@@ -393,6 +393,41 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
 	return true;
 }
 
+/**
+ * Plays the specified animation for a player
+ *
+ * @note The event argument is NOT the same as the sequence numbers found in the model viewer
+ * @note You can get the number for your animation by looking at the disasm for virtual calls to DoAnimationEvent
+ * @param client
+ * @param event PlayerAnimEvent_t
+ * @noreturn
+ */
+stock L4DDirect_DoAnimationEvent(client, event)
+{
+	if(!IsClient(client))
+	{
+		return;
+	}
+	static Handle:DoAnimationEventSDKCall = INVALID_HANDLE;
+	if(DoAnimationEventSDKCall == INVALID_HANDLE)
+	{
+		StartPrepSDKCall(SDKCall_Player);
+		if(!PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Virtual, "CTerrorPlayer::DoAnimationEvent"))
+		{
+			return;
+		}
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		DoAnimationEventSDKCall = EndPrepSDKCall();
+
+		if(DoAnimationEventSDKCall == INVALID_HANDLE)
+		{
+			return;
+		}
+	}
+	SDKCall(DoAnimationEventSDKCall, client, event, 0);
+}
+
 //----------------------------------------------------------------------------------
 // Functions below it not support Windows OS yet! (use it on Linux servers)
 //
