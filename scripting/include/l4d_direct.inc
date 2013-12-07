@@ -394,6 +394,37 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
 }
 
 /**
+ * Special infected force ghost
+ *
+ * @param entity			Entity index of SI
+ * @param delay				Time delay before force ghost
+ * @return					False on error otherwise true
+ * @error					SDK call preparation failed
+ */
+stock bool:L4DDirect_PlayerZombieAbortControl(entity, Float:delay)
+{
+	static Handle:hPlayerZombieAbortControl;
+
+	if (hPlayerZombieAbortControl == INVALID_HANDLE){
+
+		StartPrepSDKCall(SDKCall_Player);
+
+		if (PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CTerrorPlayer::PlayerZombieAbortControl")){
+
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			hPlayerZombieAbortControl = EndPrepSDKCall();
+		}
+
+		if (hPlayerZombieAbortControl == INVALID_HANDLE)
+			return false;
+	}
+
+	SetEntProp(entity, Prop_Send, "m_isCulling", 1);
+	SDKCall(hPlayerZombieAbortControl, entity, delay)
+	return true;
+}
+
+/**
  * Plays the specified animation for a player
  *
  * @note The event argument is NOT the same as the sequence numbers found in the model viewer
@@ -427,10 +458,6 @@ stock L4DDirect_DoAnimationEvent(client, event)
 	}
 	SDKCall(DoAnimationEventSDKCall, client, event, 0);
 }
-
-//----------------------------------------------------------------------------------
-// Functions below it not support Windows OS yet! (use it on Linux servers)
-//
 
 /**
  * Get the TerrorNavArea which holds a specific position.

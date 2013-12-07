@@ -1,4 +1,4 @@
-l4d_direct beta
+l4d_direct
 ===========
 
 Following ProdigySim with his amazing l4d2_direct for L4D2 I provide L4D1 version.

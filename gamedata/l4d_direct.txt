@@ -93,34 +93,48 @@
 			}
 			"TerrorNavArea::m_flow"
 			{
+				"windows"	"340"
 				"linux"		"348"
 			}
 		}
 		"Signatures"
 		{
-			/* CNavMesh::GetNavArea(Vector  const&,float) */
+			/* 
+			 * CNavMesh::GetNavArea(Vector  const&,float)
+			 * string "CanZombieSpawnHere: Spot blocked (%.0f,"
+			 */
 			"CNavMesh::GetNavArea"
 			{
 				"library"	"server"
 				"linux"		"@_ZNK8CNavMesh10GetNavAreaERK6Vectorf"
+				"windows"	"\x83\xEC\x2A\x56\x8B\xF1\x83\x7E\x2A\x2A\x75\x09\x33\xC0\x5E\x83\xC4"
+				/* 83 EC ? 56 8B F1 83 7E ? ? 75 09 33 C0 5E 83 C4 */
 			}
-			/* NavMesh::GetNearestNavArea(Vector  const&,bool,float,bool,bool) */
+			/* 
+			 * NavMesh::GetNearestNavArea(Vector  const&,bool,float,bool,bool) 
+			 * string "NavEndArea: Out of memory\n"
+			 */
 			"CNavMesh::GetNearestNavArea"
 			{
 				"library"	"server"
 				"linux"		"@_ZNK8CNavMesh17GetNearestNavAreaERK6Vectorbfbb"
+				"windows"	"\x81\xEC\xE4\x2A\x2A\x2A\x56\x57\x8B\xF1\x33\xFF\x39\x7E\x2A\x89\x74"
+				/* 81 EC E4 ? ? ? 56 57 8B F1 33 FF 39 7E ? 89 74 */
 			}
 			"CTerrorPlayer::TakeOverZombieBot"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
 				"windows"	"\x81\xEC\x08\x2A\x2A\x2A\x53\x55\x8B\xAC\x24\x2A\x2A\x2A\x2A\x56\x33\xDB\x38"
-				/*   81 EC 08 ? ? ? 53 55 8B AC 24 ? ? ? ? 56 33 DB 38 */
+				/* 81 EC 08 ? ? ? 53 55 8B AC 24 ? ? ? ? 56 33 DB 38 */
 			}
+			// this function call CTerrorPlayer::WarpGhostToInitialPosition() that call CTerrorPlayer::OnEnterGhostState() (used in left4downtown)
 			"CTerrorPlayer::PlayerZombieAbortControl"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer24PlayerZombieAbortControlEv"
+				"windows"	"\x81\xEC\x40\x2A\x2A\x2A\x56\x8B\xF1\xE8\x12\x2A\x2A\x2A\x83\xF8\x2A\x0F\x85\x2A\x2A\x2A\x2A\xA1\x88"
+				/* 81 EC 40 ? ? ? 56 8B F1 E8 12 ? ? ? 83 F8 ? 0F 85 ? ? ? ? A1 88 */
 			}
 			"CDirector::TryOfferingTankBot"
 			{
