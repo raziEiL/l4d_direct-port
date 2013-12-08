@@ -68,6 +68,45 @@ stock L4DDirect_SetTankPassedCount(passes)
 }
 
 /**
+ * Reads the director's stored campaign score for a given team.
+ * 
+ * @note You can use the gamerules m_bAreTeamsFlipped property to figure out team numbers
+ * @note The campaign scores value is also stored in gamerules, however this is the "master" version.
+ * @note Campaign scores are only updated on round end (after L4D_OnSetCampaignScores), so this will not reflect current survivor distance score
+ *
+ *
+ * @param teamNumber	Team number to read campaign score of, 0 or 1.
+ * @return				Campaign score for the given team.
+ * @error				Director or Versus Director address not found.
+ */
+stock L4DDirect_GetVSCampaignScore( teamNumber )
+{
+	if(teamNumber < 0 || teamNumber > 1) return -1;
+
+	return LoadFromAddress( L4DDirect_GetVSCampaignScoresAddr() + Address:(teamNumber * 4), NumberType_Int32 );
+}
+
+/**
+ * Set the director's stored campaign score for a given team.
+ * 
+ * @note You can use the gamerules m_bAreTeamsFlipped property to figure out team numbers
+ * @note The campaign scores value is also stored in gamerules, however this is the "master" version.
+ * @note Keep in mind the current survivor team's distance/bonus score will be added at the end of a round
+ *
+ *
+ * @param teamNumber	Team number to set campaign score of, 0 or 1.
+ * @param score			Score to set for the team
+ * @error				Director or Versus Director address not found.
+ * @noreturn
+ */
+stock L4DDirect_SetVSCampaignScore( teamNumber , score )
+{
+	if(teamNumber < 0 || teamNumber > 1) return;
+
+	StoreToAddress( L4DDirect_GetVSCampaignScoresAddr() + Address:(teamNumber * 4), score, NumberType_Int32 );
+}
+
+/**
  * Reads the tank flow percent for a given round for versus mode
  *
  * @note You should check GetVSTankToSpawnThisRound to find out if there is still a tank to spawn this round.

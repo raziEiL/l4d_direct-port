@@ -116,6 +116,23 @@ stock Address:L4DDirect_GetTankPassedCountAddr()
 }
 
 /**
+ * Get the address of CDirector::m_iCampaignScores in the global CDirector instance
+ *
+ * @return				Address of the CampaignScores array, or Address_Null on failure.
+ */
+stock Address:L4DDirect_GetVSCampaignScoresAddr()
+{
+	static Address:pCampaignScores = Address_Null;
+	if(pCampaignScores == Address_Null)
+	{
+		new offs = GameConfGetOffset(L4DDirect_GetGameConf(), "CDirector::m_iCampaignScores");
+		if(offs == -1) return Address_Null;
+		pCampaignScores = L4DDirect_GetCDirector() + Address:offs;
+	}
+	return pCampaignScores;
+}
+
+/**
  * Get the address of CDirector::m_fTankSpawnFlowPercent in the global CDirector instance
  *
  * @return				Address of the TankFlow array, or Address_Null on failure.

@@ -86,6 +86,11 @@
 				"windows"	"1882"
 				"linux"		"1878"
 			}
+			"CDirector::m_iCampaignScores"
+			{
+				"windows"	"1816"
+				"linux"		"1812"
+			}
 			"TerrorNavMesh::m_fMapMaxFlowDistance"
 			{
 				"windows"	"1444"
