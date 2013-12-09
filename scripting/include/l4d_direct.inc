@@ -69,7 +69,7 @@ stock L4DDirect_SetTankPassedCount(passes)
 
 /**
  * Reads the director's stored campaign score for a given team.
- * 
+ *
  * @note You can use the gamerules m_bAreTeamsFlipped property to figure out team numbers
  * @note The campaign scores value is also stored in gamerules, however this is the "master" version.
  * @note Campaign scores are only updated on round end (after L4D_OnSetCampaignScores), so this will not reflect current survivor distance score
@@ -88,7 +88,7 @@ stock L4DDirect_GetVSCampaignScore( teamNumber )
 
 /**
  * Set the director's stored campaign score for a given team.
- * 
+ *
  * @note You can use the gamerules m_bAreTeamsFlipped property to figure out team numbers
  * @note The campaign scores value is also stored in gamerules, however this is the "master" version.
  * @note Keep in mind the current survivor team's distance/bonus score will be added at the end of a round
@@ -285,15 +285,19 @@ stock L4DDirect_GetSurvivorHealthBonus(client)
  *
  * @param client		Client id to set the health bonus for
  * @param health		Number of health bonus
+ * @param recompute		If true, L4DDirect_RecomputeTeamScores() is called after the health bonus has been set
  * @noreturn
  * @error				Invalid client.
 */
-stock L4DDirect_SetSurvivorHealthBonus(client, health)
+stock L4DDirect_SetSurvivorHealthBonus(client, health, bool:recompute = true)
 {
 	if (!IsClient(client))
 		return;
 
-	SetEntityValueFromOffset(client, "CTerrorPlayer::m_iSurvivorHealthBonus", NumberType_Int32, health)
+	SetEntityValueFromOffset(client, "CTerrorPlayer::m_iSurvivorHealthBonus", NumberType_Int32, health);
+
+	if (recompute)
+		L4DDirect_RecomputeTeamScores();
 }
 
 /**
@@ -437,10 +441,11 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
  *
  * @param entity			Entity index of SI
  * @param delay				Time delay before force ghost
+ * @param culling			If true, m_isCulling 1
  * @return					False on error otherwise true
  * @error					SDK call preparation failed
  */
-stock bool:L4DDirect_PlayerZombieAbortControl(entity, Float:delay)
+stock bool:L4DDirect_PlayerZombieAbortControl(entity, Float:delay, bool:culling = true)
 {
 	static Handle:hPlayerZombieAbortControl;
 
@@ -458,8 +463,38 @@ stock bool:L4DDirect_PlayerZombieAbortControl(entity, Float:delay)
 			return false;
 	}
 
-	SetEntProp(entity, Prop_Send, "m_isCulling", 1);
+	if (culling)
+		SetEntProp(entity, Prop_Send, "m_isCulling", 1);
+
 	SDKCall(hPlayerZombieAbortControl, entity, delay)
+	return true;
+}
+
+/**
+ * Compute the scores on the scoreboard
+ *
+ * @noparam
+ * @return					False on error otherwise true
+ * @error					SDK call preparation failed
+ */
+stock bool:L4DDirect_RecomputeTeamScores()
+{
+	static Handle:hRecomputeTeamScores;
+
+	if (hRecomputeTeamScores == INVALID_HANDLE){
+
+		StartPrepSDKCall(SDKCall_GameRules);
+
+		if (PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CTerrorGameRules::RecomputeTeamScores")){
+
+			hRecomputeTeamScores = EndPrepSDKCall();
+
+			if (hRecomputeTeamScores == INVALID_HANDLE)
+				return false;
+		}
+	}
+
+	SDKCall(hRecomputeTeamScores);
 	return true;
 }
 

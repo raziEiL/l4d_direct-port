@@ -104,7 +104,16 @@
 		}
 		"Signatures"
 		{
-			/* 
+			/*
+			 * CTerrorGameRules::RecomputeTeamScores(void)
+			 */
+			"CTerrorGameRules::RecomputeTeamScores"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules19RecomputeTeamScoresEv"
+				"windows"	"\xA1\x88\x2A\x2A\x2A\x83\xEC\x34\x80\x78\x2A\x2A\x56\x8B\xF1\x0F\x84\x2A\x2A\x2A\x2A\x53\x33\xDB"
+			}
+			/*
 			 * CNavMesh::GetNavArea(Vector  const&,float)
 			 * string "CanZombieSpawnHere: Spot blocked (%.0f,"
 			 */
@@ -115,8 +124,8 @@
 				"windows"	"\x83\xEC\x2A\x56\x8B\xF1\x83\x7E\x2A\x2A\x75\x09\x33\xC0\x5E\x83\xC4"
 				/* 83 EC ? 56 8B F1 83 7E ? ? 75 09 33 C0 5E 83 C4 */
 			}
-			/* 
-			 * NavMesh::GetNearestNavArea(Vector  const&,bool,float,bool,bool) 
+			/*
+			 * NavMesh::GetNearestNavArea(Vector  const&,bool,float,bool,bool)
 			 * string "NavEndArea: Out of memory\n"
 			 */
 			"CNavMesh::GetNearestNavArea"
