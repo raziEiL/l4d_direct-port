@@ -441,7 +441,7 @@ stock bool:L4DDirect_TakeOverZombieBot(entity, target)
  *
  * @param entity			Entity index of SI
  * @param delay				Time delay before force ghost
- * @param culling			If true, m_isCulling 1
+ * @param culling			If true, sets m_isCulling to 1
  * @return					False on error otherwise true
  * @error					SDK call preparation failed
  */
@@ -531,6 +531,59 @@ stock L4DDirect_DoAnimationEvent(client, event)
 		}
 	}
 	SDKCall(DoAnimationEventSDKCall, client, event, 0);
+}
+
+/**
+ * Gets a player's distance in flow units.
+ *
+ * @param client			Client ID
+ * @param infected			Sets true, if target an infected (SI, Common, Boss)
+ * @return					0.0 on error otherwise flow distance
+ * @error					SDK call preparation failed
+ */
+stock Float:L4DDirect_GetFlowDistance(client, bool:infected = false)
+{
+	if (infected){
+
+		static Handle:hGetInfectedFlowDistance;
+
+		if (hGetInfectedFlowDistance == INVALID_HANDLE)
+		{
+			StartPrepSDKCall(SDKCall_Entity);
+
+			if (!PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "Infected::GetFlowDistance"))
+				return 0.0;
+
+			PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
+			hGetInfectedFlowDistance = EndPrepSDKCall();
+
+			if (hGetInfectedFlowDistance == INVALID_HANDLE)
+			{
+				return 0.0;
+			}
+		}
+
+		return Float:SDKCall(hGetInfectedFlowDistance, client, 0);
+	}
+
+	static Handle:hGetSurvivorFlowDistance = INVALID_HANDLE;
+
+	if (hGetSurvivorFlowDistance == INVALID_HANDLE)
+	{
+		StartPrepSDKCall(SDKCall_Player);
+
+		if (!PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CTerrorPlayer::GetFlowDistance"))
+			return 0.0;
+
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
+		hGetSurvivorFlowDistance = EndPrepSDKCall();
+
+		if (hGetSurvivorFlowDistance == INVALID_HANDLE)
+			return 0.0;
+	}
+
+	return Float:SDKCall(hGetSurvivorFlowDistance, client, 0);
 }
 
 /**
