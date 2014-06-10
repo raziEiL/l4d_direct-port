@@ -112,6 +112,7 @@
 				"library"	"server"
 				"linux"		"@_ZNK8Infected15GetFlowDistanceEv"
 				"windows"	"\x8B\x01\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x85\xC0\x74\x07\xD9\x80\x2A\x2A\x2A\x2A\xC3\xD9\x05\x2A\x2A\x2A\x2A\xC3"
+				/* 8B 01 8B 90 ? ? ? ? FF D2 85 C0 74 07 D9 80 ? ? ? ? C3 D9 05 ? ? ? ? C3 */
 			}
 			/*
 			 * CTerrorPlayer::GetFlowDistance(TerrorNavArea::FlowType)const
@@ -121,6 +122,7 @@
 				"library"	"server"
 				"linux"		"@_ZNK13CTerrorPlayer15GetFlowDistanceEN13TerrorNavArea8FlowTypeE"
 				"windows"	"\x8B\x01\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x85\xC0\x74\x0E\x8B\x4C\x24\x04\xD9\x84\x88\x2A\x2A\x2A\x2A\xC2\x04\x00\xD9\x05\x2A\x2A\x2A\x2A\xC2\x04\x00"
+				/* 8B 01 8B 90 ? ? ? ? FF D2 85 C0 74 0E 8B 4C 24 04 D9 84 88 ? ? ? ? C2 04 00 D9 05 ? ? ? ? C2 04 00 */
 			}
 			/*
 			 * CTerrorGameRules::RecomputeTeamScores(void)
@@ -130,6 +132,7 @@
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules19RecomputeTeamScoresEv"
 				"windows"	"\xA1\x88\x2A\x2A\x2A\x83\xEC\x34\x80\x78\x2A\x2A\x56\x8B\xF1\x0F\x84\x2A\x2A\x2A\x2A\x53\x33\xDB"
+				/* A1 88 ? ? ? 83 EC 34 80 78 ? ? 56 8B F1 0F 84 ? ? ? ? 53 33 DB */
 			}
 			/*
 			 * CNavMesh::GetNavArea(Vector  const&,float)
@@ -165,8 +168,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer24PlayerZombieAbortControlEv"
-				"windows"	"\x81\xEC\x40\x2A\x2A\x2A\x56\x8B\xF1\xE8\x12\x2A\x2A\x2A\x83\xF8\x2A\x0F\x85\x2A\x2A\x2A\x2A\xA1\x88"
-				/* 81 EC 40 ? ? ? 56 8B F1 E8 12 ? ? ? 83 F8 ? 0F 85 ? ? ? ? A1 88 */
+				"windows"	"\x81\xEC\x40\x2A\x2A\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x83\xF8\x2A\x0F\x85\x2A\x2A\x2A\x2A\xA1\x88"
+				/* 81 EC 40 ? ? ? 56 8B F1 E8 ? ? ? ? 83 F8 ? 0F 85 ? ? ? ? A1 88 */
 			}
 			"CDirector::TryOfferingTankBot"
 			{
