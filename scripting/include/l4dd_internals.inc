@@ -2,6 +2,7 @@
  * vim: set ts=4 :
  * =============================================================================
  * L4D_Direct Internals
+ * Copyright (C) 2012-2015  raziEiL <war4291@mail.ru>
  * Copyright (C) 2012 Michael "ProdigySim" Busby
  * =============================================================================
  *
@@ -183,9 +184,8 @@ stock Address:L4DDirect_GetVSWitchFlowAddr()
 	return pTankFlowPercent;
 }
 
-
 /**
- * Get the address of CDIrectorVersusMode::m_bWitchThisRound in the global CDirectorVersusMode instance
+ * Get the address of CDirector::m_bWitchThisRound in the global CDirector instance
  *
  * @return				Address of the WitchToSpawn array, or Address_Null on failure.
  */
@@ -216,6 +216,22 @@ stock Address:L4DDirect_GetMapMaxFlowDistanceAddr()
 		pMapMaxFlowDistance = L4DDirect_GetTerrorNavMesh() + Address:offs;
 	}
 	return pMapMaxFlowDistance;
+}
+/**
+ * Get the address of ZombieManager:m_MobSpawnCount in the global ZombieManager instance
+ *
+ * @return				Address of the MobSpawnCount variable, or Address_Null on failure.
+ */
+stock Address:L4DDirect_GetPendingMobCountAddr()
+{
+	static Address:pPendingMobCount = Address_Null;
+	if(pPendingMobCount == Address_Null)
+	{
+		new offs = GameConfGetOffset(L4DDirect_GetGameConf(), "ZombieManager::m_PendingMobCount");
+		if(offs == -1) return Address_Null;
+		pPendingMobCount = L4DDirect_GetZombieManager() + Address:offs;
+	}
+	return pPendingMobCount;
 }
 
 /**

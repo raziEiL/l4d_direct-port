@@ -2,6 +2,7 @@
  * vim: set ts=4 :
  * =============================================================================
  * L4D_Direct
+ * Copyright (C) 2012-2015  raziEiL <war4291@mail.ru>
  * Copyright (C) 2012 Michael "ProdigySim" Busby
  * =============================================================================
  *
@@ -35,6 +36,7 @@
 
 #include <sourcemod>
 #include <l4dd_internals>
+#include <l4dd_timers>
 
 /* --- CDirector Variable access --- */
 
@@ -338,7 +340,102 @@ stock L4DDirect_SetTankTickets(client, tickets)
 	SetEntityValueFromOffset(client, "CTerrorPlayer::m_iTankTickets", NumberType_Int32, tickets);
 }
 
+/* --- ZombieManager Variable access --- */
+
+stock L4DDirect_GetPendingMobCount()
+{
+	return LoadFromAddress(L4DDirect_GetPendingMobCountAddr(), NumberType_Int32);
+}
+
+stock L4DDirect_SetPendingMobCount(count)
+{
+	StoreToAddress(L4DDirect_GetPendingMobCountAddr(), count, NumberType_Int32);
+}
+
+
+/* --- Timers Variable access --- */
+
+/**
+ * Get a reference to the CountdownTimer
+ *
+ * @note This timer controls when the saferoom door will open and PZ spawning is enabled
+ * @note The default duration for this timer is controlled by cvar: versus_force_start_time
+ *
+ * @param timer			CountdownTimer name (defined in TimerRef enums).
+ * @param client		Client id to get the timer for (only for CTerrorPlayer timers instance)
+ * @return				CountdownTimer reference to the timer, or CTimer_Null on lookup failure.
+ * @error				Director address not found.
+ */
+stock CountdownTimer:L4DDirect_GetTimerRef(TimerRef:timer, client = 0)
+{
+	if (timer >= SpawnTimer ){
+	
+		static Offset[TimerRef];
+		if (!IsClient(client))
+			return CTimer_Null;
+
+		new Address:pEntity = GetEntityAddress(client);
+		if (pEntity == Address_Null)
+			return CTimer_Null;
+
+		if (Offset[timer] <= 0){
+
+			Offset[timer] = GameConfGetOffset(L4DDirect_GetGameConf(), g_sOffsets[timer]);
+			if (Offset[timer] == -1)
+				return CTimer_Null;
+		}
+
+		return CountdownTimer:(pEntity + Address:Offset[timer]);
+	}
+	else {
+
+		static Address:pTimer[TimerRef];
+		if(pTimer[timer] == Address_Null)
+		{
+			new offs = GameConfGetOffset(L4DDirect_GetGameConf(), g_sOffsets[timer]);
+			if(offs == -1) return CTimer_Null;
+			pTimer[timer] = L4DDirect_GetCDirector() + Address:offs;
+		}
+		return CountdownTimer:pTimer[timer];
+	}
+}
+
 /* --- Functions Calls --- */
+
+/**
+ * @brief Trigger's a target player's stagger behavior
+ * @remarks Works on any CTerrorPlayer--survivor or infected.
+ *
+ * @param target 		Player to stagger
+ * @param source_ent	Source of the stagger (another player, etc)
+ * @param source_vector Source location of the stagger. If NULL_VECTOR, origins of source_ent is used.
+ * @noreturn
+ */
+stock bool:L4DDirect_StaggerPlayer(target, source_ent, Float:source_vector[3] = {0.0, 0.0, 0.0})
+{
+	static Handle:hSDKCallStagger;
+
+	if (hSDKCallStagger == INVALID_HANDLE){
+
+		StartPrepSDKCall(SDKCall_Player);
+
+		if (!PrepSDKCall_SetFromConf(L4DDirect_GetGameConf(), SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
+			return false;
+
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
+		hSDKCallStagger = EndPrepSDKCall();
+
+		if (hSDKCallStagger == INVALID_HANDLE)
+			return false;
+	}
+
+	if (!source_vector[0] && !source_vector[1] && !source_vector[2])
+		GetClientAbsOrigin(source_ent, source_vector);
+
+	SDKCall(hSDKCallStagger, target, source_ent, source_vector);
+	return true;
+}
 
 /**
  * Force the director to pass the tank.
